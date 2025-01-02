@@ -85,6 +85,27 @@ void	ft_putstr(char *str)
 		i++;
 	}
 }
+int ft_putnb_base(int nb, char *base)
+{
+	int	len;
+	char r;
+    int count;
+	
+	count = 0;
+    len = ft_strlen(base);
+	if(nb < 0)
+	{
+		write(1, "-", 1);
+		nb = -nb;
+        count++;
+	}
+	r =  nb % len;
+	if (nb >= len)
+		ft_putnb_base(nb / len, base);
+	write(1, &base[r], 1);
+    count++;
+    return (count);
+}
 
 char	*ft_strchr(const char *str, int search_str)
 {
@@ -114,22 +135,23 @@ int handle_variable(char c, va_list args)
         ft_putstr(str);
         return (ft_strlen(str));
     }
-    else if(c == 'i'|| c == 'd')
+    else if(c == 'i'|| c == 'd'|| c == 'u')
     {
         int val = va_arg(args, int);
         ft_putstr(ft_itoa(val));
         return (get_size(val));
     }
-    else if(c == 'u')
+    else if(c == 'x')
     {
-        unsigned int val = va_arg(args, unsigned int);
-        if (val < 0)
-            val = 4294967296 - val; // conversion 2 power 32 minus value
-        ft_putstr(ft_itoa(val));
-        return (get_size(val));
+        int val = va_arg(args, int);
+        return(ft_putnb_base(val, "0123456789abcdef"));
+    }
+     else if(c == 'X')
+    {
+        int val = va_arg(args, int);
+        return(ft_putnb_base(val, "0123456789ABCDEF"));
     }
     return(-1);
-       
 }
 int get_nbarguments(const char *str)
 {
@@ -178,6 +200,6 @@ int ft_printf(const char *str, ...)
 }
 int main(void)
 {
-    ft_printf("letsgooooooo %s le %c du %u", "francis", 'S', -42);
+    ft_printf("letsgooooooo %s le %c du %X", "francis", 'S', -42);
     return (0);
 }
