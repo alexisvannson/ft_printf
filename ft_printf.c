@@ -17,11 +17,13 @@ int	print_pointer(unsigned long long ptr)
 	int	count;
 
 	count = 0;
-	count += write(1, "0x", 2);
 	if (ptr == 0)
-		count += write(1, "0", 1);
-	else
-		count += print_hex(ptr);
+	{
+		count += write(1, "(nil)", 5);
+		return (count);
+	}	
+	count += write(1, "0x", 2);
+	count += print_hex(ptr);
 	return (count);
 }
 
